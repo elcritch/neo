@@ -18,11 +18,13 @@ type
   StaticVector*[N: static[int]; A] = distinct Vector[A]
   StaticMatrix*[M, N: static[int]; A] = distinct Matrix[A]
 
-proc asStatic*[A](v: Vector[A], N: static[int]): auto {.inline.} =
+{.push hint[Name]: off.}
+
+proc asStatic*[A](v: Vector[A], N: static[int]): StaticVector[N, A] {.inline.} =
   checkDim(v.len == N, "Wrong dimension: " & $N)
   StaticVector[N, A](v)
 
-proc asStatic*[A](m: Matrix[A], M, N: static[int]): auto {.inline.} =
+proc asStatic*[A](m: Matrix[A], M, N: static[int]): StaticMatrix[M, N, A] {.inline.} =
   checkDim(m.M == M, "Wrong dimension: " & $M)
   checkDim(m.N == N, "Wrong dimension: " & $N)
   StaticMatrix[M, N, A](m)
@@ -226,7 +228,7 @@ proc map*[M, N: static[int]; A, B](m: StaticMatrix[M, N, A], f: proc(x: A): B): 
 
 proc reshape*[M, N: static[int], T](m: StaticMatrix[M, N, T], A, B: static[int]): StaticMatrix[A, B, T] =
   static: doAssert(M * N == A * B, "The dimensions do not match: M = " & $(M) & ", N = " & $(N) & ", A = " & $(A) & ", B = " & $(B))
-  dyn(m, T).reshape(A, B).asStatic(A, B)
+#  dyn(m, T).reshape(A, B).asStatic(A, B)
 
 proc asMatrix*[N: static[int], T](v: StaticVector[N, T], A, B: static[int], order: OrderType = colMajor): StaticMatrix[A, B, T] =
   static: doAssert(N == A * B, "The dimensions do not match: N = " & $(N) & ", A = " & $(A) & ", B = " & $(B))
@@ -240,6 +242,89 @@ proc t*[M, N: static[int], A](m: StaticMatrix[M, N, A]): StaticMatrix[N, M, A] =
 
 proc T*[M, N: static[int], A](m: StaticMatrix[M, N, A]): StaticMatrix[N, M, A] =
   dyn(m, A).T().asStatic(N, M)
+
+# Stacking
+import macros
+
+template hstack*[N,V](
+    m1: StaticVector[N,V]
+): auto =
+  hstack(m1).asStatic(M, 1)
+
+template hstack*[N1,N2: static[int],V](
+    m1: StaticVector[N1, V],
+    m2: StaticVector[N2, V]
+): auto =
+  dense.hstack(m1.asDynamic, m2.asDynamic).asStatic(N1 + N2)
+
+template hstack*[N1,N2,N3: static[int], V](
+    m1: StaticVector[N1, V],
+    m2: StaticVector[N2, V],
+    m3: StaticVector[N3, V]
+): auto =
+  dense.hstack(m1.asDynamic, m2.asDynamic, m3.asDynamic).asStatic(N1+N2+N3)
+
+template hstack*[N1,N2,N3: static[int], V](
+    m1: StaticVector[N1, V],
+    m2: StaticVector[N2, V],
+    m3: StaticVector[N3, V],
+    m4: StaticVector[N4, V],
+): auto =
+  dense.hstack(m1.asDynamic, m2.asDynamic, m3.asDynamic).asStatic(N1+N2+N3+N4)
+
+template hstack*[M,V,N](
+    m1: StaticMatrix[M,N,V]
+): StaticMatrix[M,N,V] =
+  m1
+
+template hstack*[M,V,N1,N2](
+    m1: StaticMatrix[M, N1, V],
+    m2: StaticMatrix[M, N2, V]
+): StaticMatrix[M,N1,V] =
+  dense.hstack(m1.asDynamic, m2.asDynamic).asStatic(M, N1 + N2)
+
+template hstack*[M,V,N1,N2,N3](
+    m1: StaticMatrix[M, N1, V],
+    m2: StaticMatrix[M, N2, V],
+    m3: StaticMatrix[M, N3, V],
+): StaticMatrix[M,N1,V] =
+  dense.hstack(m1.asDynamic, m2.asDynamic, m3.asDynamic).asStatic(M, N1 + N2 + N3)
+
+template hstack*[M,V,N1,N2,N3,N4](
+    m1: StaticMatrix[M, N1, V],
+    m2: StaticMatrix[M, N2, V],
+    m3: StaticMatrix[M, N3, V],
+    m4: StaticMatrix[M, N4, V],
+): StaticMatrix[M,N1,V] =
+  dense.hstack(m1.asDynamic, m2.asDynamic, m3.asDynamic).asStatic(M, N1 + N2 + N3 + N4)
+
+
+template vstack*[M,V,N](
+    m1: StaticMatrix[M,N,V]
+): StaticMatrix[M,N,V] =
+  m1
+
+template vstack*[N,V,M1,M2](
+    m1: StaticMatrix[M1, N, V],
+    m2: StaticMatrix[M2, N, V]
+): StaticMatrix[M1,N,V] =
+  dense.hstack(m1.asDynamic, m2.asDynamic).asStatic(M, N1 + N2)
+
+template vstack*[M,V,N1,N2,N3](
+    m1: StaticMatrix[M, N1, V],
+    m2: StaticMatrix[M, N2, V],
+    m3: StaticMatrix[M, N3, V],
+): StaticMatrix[M,N1,V] =
+  dense.vstack(m1.asDynamic, m2.asDynamic, m3.asDynamic).asStatic(M, N1 + N2 + N3)
+
+template vstack*[M,V,N1,N2,N3,N4](
+    m1: StaticMatrix[M, N1, V],
+    m2: StaticMatrix[M, N2, V],
+    m3: StaticMatrix[M, N3, V],
+    m4: StaticMatrix[M, N4, V],
+): StaticMatrix[M,N1,V] =
+  dense.vstack(m1.asDynamic, m2.asDynamic, m3.asDynamic).asStatic(M, N1 + N2 + N3 + N4)
+
 
 # Slice accessors
 
@@ -526,3 +611,5 @@ proc tr*[N: static[int], A](a: StaticMatrix[N, N, A]): A =
 
 proc det*[N: static[int], A: SomeFloat](a: StaticMatrix[N, N, A]): A =
   det(dyn(a, A))
+
+{.pop.}

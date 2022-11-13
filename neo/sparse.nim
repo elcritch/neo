@@ -16,6 +16,8 @@ import ./core, ./dense
 
 export core
 
+{.push hint[Name]: off.}
+
 type
   SparseVector*[A] = ref object
     N*: int32
@@ -244,3 +246,5 @@ proc `==`*[A](m, n: SparseMatrix[A]): bool = m.dense == n.dense
 proc `$`*[A](v: SparseVector[A]): string = $(v.dense)
 
 proc `$`*[A](m: SparseMatrix[A]): string = $(m.dense)
+
+{.pop.}

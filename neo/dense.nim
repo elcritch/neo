@@ -17,6 +17,8 @@ import ./core, ./private/neocommon
 export nimblas.OrderType
 export core
 
+{.push hint[Name]: off.}
+
 type
   MatrixShape* = enum
     Diagonal, UpperTriangular, LowerTriangular, UpperHessenberg, LowerHessenberg, Symmetric
@@ -1520,4 +1522,4 @@ proc det*[A: SomeFloat](a: Matrix[A]): A =
   for i in 0 ..< a.M:
     result *= up[i * (1 + u.ld)]
 
-
+{.pop.}
