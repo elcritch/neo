@@ -264,13 +264,48 @@ template hstack*[N1,N2,N3: static[int], V](
 ): auto =
   dense.hstack(m1.asDynamic, m2.asDynamic, m3.asDynamic).asStatic(N1+N2+N3)
 
-template hstack*[N1,N2,N3: static[int], V](
+template hstack*[N1,N2,N3,N4: static[int], V](
     m1: StaticVector[N1, V],
     m2: StaticVector[N2, V],
     m3: StaticVector[N3, V],
     m4: StaticVector[N4, V],
 ): auto =
   dense.hstack(m1.asDynamic, m2.asDynamic, m3.asDynamic).asStatic(N1+N2+N3+N4)
+
+template vstack*[N,V](
+    mm: varargs[StaticVector[N,V]]
+): StaticMatrix[1,N,V] =
+  vstack(mm).asStatic(mm.len(),N)
+
+template vstack*[N: static[int],V](
+    m1: StaticVector[N, V],
+    m2: StaticVector[N, V]
+): StaticMatrix[2,N,V] =
+  dense.vstack(m1.asDynamic, m2.asDynamic).asStatic(2,N)
+
+template vstack*[N: static[int], V](
+    m1: StaticVector[N, V],
+    m2: StaticVector[N, V],
+    m3: StaticVector[N, V]
+): StaticMatrix[3,N,V] =
+  dense.vstack(m1.asDynamic, m2.asDynamic, m3.asDynamic).asStatic(3,N)
+
+template vstack*[N: static[int], V](
+    m1: StaticVector[N, V],
+    m2: StaticVector[N, V],
+    m3: StaticVector[N, V],
+    m4: StaticVector[N, V]
+): StaticMatrix[4,N,V] =
+  dense.vstack(m1.asDynamic, m2.asDynamic, m3.asDynamic, m4.asDynamic).asStatic(4,N)
+
+template vstack*[N1,N2,N3,N4: static[int], V](
+    m1: StaticVector[N1, V],
+    m2: StaticVector[N2, V],
+    m3: StaticVector[N3, V],
+    m4: StaticVector[N4, V],
+): auto =
+  dense.vstack(m1.asDynamic, m2.asDynamic, m3.asDynamic).asStatic(N1+N2+N3+N4)
+
 
 template hstack*[M,V,N](
     m1: StaticMatrix[M,N,V]

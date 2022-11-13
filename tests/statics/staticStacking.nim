@@ -71,29 +71,30 @@ proc run() =
     #     ])
     #   check hstack(m1, m2, m3) == m
 
-    # test "vertical stack of two vectors":
-    #   let
-    #     v1 = vector([1.0, 2.0, 3.0])
-    #     v2 = vector([5.0, 7.0, 9.0])
-    #     m = matrix([
-    #       [1.0, 2.0, 3.0],
-    #       [5.0, 7.0, 9.0]
-    #     ])
-    #   check matrix([v1, v2]) == m
-    #   check vstack(v1, v2) == m
+    test "vertical stack of two vectors":
+      let
+        v1 = vector([1.0, 2.0, 3.0])
+        v2 = vector([5.0, 7.0, 9.0])
+        m = matrix([
+          [1.0, 2.0, 3.0],
+          [5.0, 7.0, 9.0]
+        ])
+      # check matrix([v1, v2]) == m
+      check vstack(v1, v2) == m
 
-    # test "vertical stack of three vectors":
-    #   let
-    #     v1 = vector([1.0, 2.0, 3.0])
-    #     v2 = vector([5.0, 7.0, 9.0])
-    #     v3 = vector([9.9, 8.8, 7.7])
-    #     m = matrix([
-    #       [1.0, 2.0, 3.0],
-    #       [5.0, 7.0, 9.0],
-    #       [9.9, 8.8, 7.7]
-    #     ])
-    #   check matrix([v1, v2, v3]) == m
-    #   check vstack(v1, v2, v3) == m
+    test "vertical stack of three vectors":
+      let
+        v1 = vector([1.0, 2.0, 3.0])
+        v2 = vector([5.0, 7.0, 9.0])
+        v3 = vector([9.9, 8.8, 7.7])
+        m = matrix([
+          [1.0, 2.0, 3.0],
+          [5.0, 7.0, 9.0],
+          [9.9, 8.8, 7.7]
+        ])
+      # check matrix([v1, v2, v3]) == m
+      let res = vstack(v1, v2, v3)
+      check vstack(v1, v2, v3) == m
 
     # test "vertical stack of three matrices":
     #   let
