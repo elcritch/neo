@@ -51,25 +51,25 @@ proc run() =
       # check m1 !! m2 == m
       # check m1 ++ m2 == m
 
-    # test "horizontal stack of three matrices":
-    #   let
-    #     m1 = matrix([
-    #       [1.0, 2.0],
-    #       [3.0, 4.0]
-    #     ])
-    #     m2 = matrix([
-    #       [5.0, 7.0, 9.0],
-    #       [6.0, 2.0, 1.0]
-    #     ])
-    #     m3 = matrix([
-    #       [2.0, 2.0],
-    #       [1.0, 3.0]
-    #     ])
-    #     m = matrix([
-    #       [1.0, 2.0, 5.0, 7.0, 9.0, 2.0, 2.0],
-    #       [3.0, 4.0, 6.0, 2.0, 1.0, 1.0, 3.0]
-    #     ])
-    #   check hstack(m1, m2, m3) == m
+    test "horizontal stack of three matrices":
+      let
+        m1 = matrix([
+          [1.0, 2.0],
+          [3.0, 4.0]
+        ])
+        m2 = matrix([
+          [5.0, 7.0, 9.0],
+          [6.0, 2.0, 1.0]
+        ])
+        m3 = matrix([
+          [2.0, 2.0],
+          [1.0, 3.0]
+        ])
+        m = matrix([
+          [1.0, 2.0, 5.0, 7.0, 9.0, 2.0, 2.0],
+          [3.0, 4.0, 6.0, 2.0, 1.0, 1.0, 3.0]
+        ])
+      check hstack(m1, m2, m3) == m
 
     test "vertical stack of two vectors":
       let
@@ -95,6 +95,23 @@ proc run() =
       # check matrix([v1, v2, v3]) == m
       let res = vstack(v1, v2, v3)
       check vstack(v1, v2, v3) == m
+
+    test "vertical stack of two matrices":
+      let
+        m1 = matrix([
+          [1.0, 2.0],
+          [3.0, 4.0]
+        ])
+        m2 = matrix([
+          [5.0, 6.0],
+          [7.0, 8.0],
+          [9.0, 10.0]
+        ])
+        m = matrix([
+          [1.0, 3, 5, 7, 9],
+          [2.0, 4, 6, 8, 10],
+        ]).T
+      check vstack(m1, m2) == m
 
     # test "vertical stack of three matrices":
     #   let

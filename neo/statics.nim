@@ -243,8 +243,8 @@ proc t*[M, N: static[int], A](m: StaticMatrix[M, N, A]): StaticMatrix[N, M, A] =
 proc T*[M, N: static[int], A](m: StaticMatrix[M, N, A]): StaticMatrix[N, M, A] =
   dyn(m, A).T().asStatic(N, M)
 
-# Stacking
 import macros
+# Stacking Vectors
 
 template hstack*[N,V](
     m1: StaticVector[N,V]
@@ -306,6 +306,7 @@ template vstack*[N1,N2,N3,N4: static[int], V](
 ): auto =
   dense.vstack(m1.asDynamic, m2.asDynamic, m3.asDynamic).asStatic(N1+N2+N3+N4)
 
+# Stacking Matrices
 
 template hstack*[M,V,N](
     m1: StaticMatrix[M,N,V]
@@ -315,14 +316,14 @@ template hstack*[M,V,N](
 template hstack*[M,V,N1,N2](
     m1: StaticMatrix[M, N1, V],
     m2: StaticMatrix[M, N2, V]
-): StaticMatrix[M,N1,V] =
+): auto =
   dense.hstack(m1.asDynamic, m2.asDynamic).asStatic(M, N1 + N2)
 
 template hstack*[M,V,N1,N2,N3](
     m1: StaticMatrix[M, N1, V],
     m2: StaticMatrix[M, N2, V],
     m3: StaticMatrix[M, N3, V],
-): StaticMatrix[M,N1,V] =
+): auto =
   dense.hstack(m1.asDynamic, m2.asDynamic, m3.asDynamic).asStatic(M, N1 + N2 + N3)
 
 template hstack*[M,V,N1,N2,N3,N4](
@@ -330,26 +331,25 @@ template hstack*[M,V,N1,N2,N3,N4](
     m2: StaticMatrix[M, N2, V],
     m3: StaticMatrix[M, N3, V],
     m4: StaticMatrix[M, N4, V],
-): StaticMatrix[M,N1,V] =
+): auto =
   dense.hstack(m1.asDynamic, m2.asDynamic, m3.asDynamic).asStatic(M, N1 + N2 + N3 + N4)
-
 
 template vstack*[M,V,N](
     m1: StaticMatrix[M,N,V]
-): StaticMatrix[M,N,V] =
+): auto =
   m1
 
 template vstack*[N,V,M1,M2](
     m1: StaticMatrix[M1, N, V],
     m2: StaticMatrix[M2, N, V]
-): StaticMatrix[M1,N,V] =
-  dense.hstack(m1.asDynamic, m2.asDynamic).asStatic(M, N1 + N2)
+): auto =
+  dense.vstack(m1.asDynamic, m2.asDynamic).asStatic(M1+M2, N)
 
 template vstack*[M,V,N1,N2,N3](
     m1: StaticMatrix[M, N1, V],
     m2: StaticMatrix[M, N2, V],
     m3: StaticMatrix[M, N3, V],
-): StaticMatrix[M,N1,V] =
+): auto =
   dense.vstack(m1.asDynamic, m2.asDynamic, m3.asDynamic).asStatic(M, N1 + N2 + N3)
 
 template vstack*[M,V,N1,N2,N3,N4](
@@ -357,9 +357,8 @@ template vstack*[M,V,N1,N2,N3,N4](
     m2: StaticMatrix[M, N2, V],
     m3: StaticMatrix[M, N3, V],
     m4: StaticMatrix[M, N4, V],
-): StaticMatrix[M,N1,V] =
-  dense.vstack(m1.asDynamic, m2.asDynamic, m3.asDynamic).asStatic(M, N1 + N2 + N3 + N4)
-
+): auto =
+  dense.vstack(m1.asDynamic, m2.asDynamic, m3.asDynamic, m4.asDynamic).asStatic(M, N1 + N2 + N3 + N4)
 
 # Slice accessors
 
