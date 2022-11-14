@@ -113,24 +113,24 @@ proc run() =
         ]).T
       check vstack(m1, m2) == m
 
-    # test "vertical stack of three matrices":
-    #   let
-    #     m1 = matrix([
-    #       [1.0, 2.0],
-    #       [3.0, 4.0]
-    #     ]).T
-    #     m2 = matrix([
-    #       [5.0, 7.0, 9.0],
-    #       [6.0, 2.0, 1.0]
-    #     ]).T
-    #     m3 = matrix([
-    #       [2.0, 2.0],
-    #       [1.0, 3.0]
-    #     ]).T
-    #     m = matrix([
-    #       [1.0, 2.0, 5.0, 7.0, 9.0, 2.0, 2.0],
-    #       [3.0, 4.0, 6.0, 2.0, 1.0, 1.0, 3.0]
-    #     ]).T
-    #   check vstack(m1, m2, m3) == m
+    test "vertical stack of three matrices":
+      let
+        m1 = matrix([
+          [1.0, 2.0],
+          [3.0, 4.0]
+        ]).T
+        m2 = matrix([
+          [5.0, 7.0, 9.0],
+          [6.0, 2.0, 1.0]
+        ]).T
+        m3 = matrix([
+          [2.0, 2.0],
+          [1.0, 3.0]
+        ]).T
+        m = matrix([
+          [1.0, 2.0, 5.0, 7.0, 9.0, 2.0, 2.0],
+          [3.0, 4.0, 6.0, 2.0, 1.0, 1.0, 3.0]
+        ]).T
+      check vstack(m1, m2, m3) == m
 
 run()
