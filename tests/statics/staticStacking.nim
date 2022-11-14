@@ -79,8 +79,8 @@ proc run() =
           [1.0, 2.0, 3.0],
           [5.0, 7.0, 9.0]
         ])
-      # check matrix([v1, v2]) == m
       check vstack(v1, v2) == m
+      check matrix([v1, v2]) == m
 
     test "vertical stack of three vectors":
       let
@@ -92,7 +92,7 @@ proc run() =
           [5.0, 7.0, 9.0],
           [9.9, 8.8, 7.7]
         ])
-      # check matrix([v1, v2, v3]) == m
+      check matrix([v1, v2, v3]) == m
       let res = vstack(v1, v2, v3)
       check vstack(v1, v2, v3) == m
 

@@ -64,6 +64,7 @@ proc `$`*[M, N: static[int]; A](m: StaticMatrix[M, N, A]): string =
 
 type Array[N: static[int]; A] = array[N, A]
 type DoubleArray[M, N: static[int], A] = array[M, array[N, A]]
+type DoubleVector[M, N: static[int], A] = array[M, StaticVector[N, A]]
 
 proc makeVector*[A](N: static[int], f: proc (i: int): A): auto =
   dense.makeVector(N, f).asStatic(N)
@@ -105,6 +106,9 @@ template makeMatrixIJ*(A: typedesc; M, N: static[int], f: untyped, order = colMa
   dense.makeMatrixIJ(A, M, N, f, order).asStatic(M, N)
 
 proc matrix*[M, N: static[int], A](xs: DoubleArray[M, N, A], order = colMajor): auto =
+  makeMatrixIJ(A, M, N, xs[i][j], order)
+
+proc matrix*[M, N: static[int], A](xs: DoubleVector[M, N, A], order = colMajor): auto =
   makeMatrixIJ(A, M, N, xs[i][j], order)
 
 proc zeros*(M, N: static[int], order = colMajor): auto =
